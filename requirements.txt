@@ -1,0 +1,15 @@
+
+transformers 
+sentence-transformers 
+langchain 
+langchain-community 
+bitsandbytes 
+accelerate 
+"langchain-chroma>=0.1.2" 
+langchain-huggingface 
+transformers 
+torch 
+langchainhub 
+gradio
+
+
