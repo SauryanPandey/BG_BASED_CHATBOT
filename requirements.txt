@@ -2,6 +2,7 @@
 transformers 
 sentence-transformers 
 langchain 
+pypdf 
 langchain-community 
 bitsandbytes 
 accelerate 

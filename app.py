@@ -3,33 +3,50 @@ from langchain.schema import HumanMessage, AIMessage
 from langchain.chains import create_retrieval_chain, create_history_aware_retriever
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.vectorstores import Chroma
-from langchain.llms import HuggingFacePipeline
+from langchain_huggingface import HuggingFacePipeline
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig, pipeline
 from langchain_huggingface import HuggingFaceEmbeddings
-import zipfile
-import os
-
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_chroma import Chroma
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.docstore.document import Document
 from google.colab import userdata
 from huggingface_hub import login
 
 hf_token = userdata.get('API_KEY')
 login(token=hf_token)
 
-zip_path = "/content/bg_data_english.zip"  # Path to your ZIP file
-extract_path = "./bg_data_unzipped_english"  # Target folder for extraction
+pdf_paths = [
+    "/content/bhagavad-gita-in-english-source-file.pdf",
+    "/content/Bhagavad-gita_As_It_Is_Full.pdf"]
 
-if not os.path.exists(extract_path):  # Check if already extracted
-    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        zip_ref.extractall(extract_path)
+pages = []
+for pdf_path in pdf_paths:
+    loader = PyPDFLoader(pdf_path)
+    pages = loader.load_and_split()
+    pages.extend(pages)
+
+for p in pages:
+  p.page_content = p.page_content.replace("\n", " ")
 
 embed_model = HuggingFaceEmbeddings(model_name='thenlper/gte-base')
 
-# Load the pre-existing vector store
-vector_store = Chroma(persist_directory=extract_path, embedding_function=embed_model)
-similarity_retriever = vector_store.as_retriever(
-    search_type="similarity_score_threshold", search_kwargs={"k": 5, "score_threshold": 0.2}
+docs = [Document(page_content=doc.page_content) for doc in pages]
+
+splitter = RecursiveCharacterTextSplitter(chunk_size=1500, chunk_overlap=300)
+chunked_docs = splitter.split_documents(docs)
+
+vector_store = Chroma(
+    collection_name="bg_data_english",
+    embedding_function=embed_model,
+    persist_directory="./bg_data_english",
 )
+
+vector_store.add_documents(documents=chunked_docs)
+
+similarity_retriever = vector_store.as_retriever(search_type="similarity_score_threshold",
+search_kwargs={"k": 5, "score_threshold": 0.2})
 
 # Load the LLM
 quantization_config = BitsAndBytesConfig(load_in_8bit=True)
@@ -43,7 +60,7 @@ text_generation_pipeline = pipeline(
     tokenizer=tokenizer,
     task="text-generation",
     return_full_text=False,
-    max_new_tokens=350,
+    max_new_tokens=500
 )
 llm = HuggingFacePipeline(pipeline=text_generation_pipeline)
 
@@ -93,11 +110,12 @@ def chat(question):
     global chat_history
     response = qa_rag_chain.invoke({"input": question, "chat_history": chat_history})
     answer = response["answer"].strip()
-    if answer.startswith("Saintly Guide:"):
-        answer = answer[len("Saintly Guide:"):].strip()
-    elif answer.startswith("AI:"):
-        answer = answer[len("AI:"):].strip()
-    chat_history.extend([HumanMessage(content=question), AIMessage(content=response["answer"])])
+    colon_index = answer[:25].find(":")
+    if colon_index != -1:
+        answer = answer[colon_index + 1:].strip()
+
+    chat_history.extend([HumanMessage(content=question), AIMessage(content=answer)])
+
     return answer
 
 # Create Gradio interface
@@ -111,4 +129,4 @@ interface = gr.Interface(
 
 # Launch the app
 if __name__ == "__main__":
-    interface.launch(debug = True)
+    interface.launch(debug = True, pwa = True, share = True)
