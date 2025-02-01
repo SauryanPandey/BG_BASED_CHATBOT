@@ -24,36 +24,46 @@ pdf_paths = [
 pages = []
 for pdf_path in pdf_paths:
     loader = PyPDFLoader(pdf_path)
-    pages = loader.load_and_split()
-    pages.extend(pages)
+    current_pages = loader.load_and_split()
+    pages.extend(current_pages)
 
 for p in pages:
-  p.page_content = p.page_content.replace("\n", " ")
+    p.page_content = p.page_content.replace("\n", " ")
+
+splitter = RecursiveCharacterTextSplitter(chunk_size=1500, chunk_overlap=150)
+chunked_docs = splitter.split_documents(pages)
+
+seen_content = set()
+unique_chunked_docs = []
+for doc in chunked_docs:
+    stripped_content = doc.page_content.strip()
+    if stripped_content not in seen_content:
+        seen_content.add(stripped_content)
+        new_doc = Document(
+            page_content=stripped_content,
+            metadata=doc.metadata  
+        )
+        unique_chunked_docs.append(new_doc)
 
 embed_model = HuggingFaceEmbeddings(model_name='thenlper/gte-base')
-
-docs = [Document(page_content=doc.page_content) for doc in pages]
-
-splitter = RecursiveCharacterTextSplitter(chunk_size=1500, chunk_overlap=300)
-chunked_docs = splitter.split_documents(docs)
-
 vector_store = Chroma(
     collection_name="bg_data_english",
     embedding_function=embed_model,
-    persist_directory="./bg_data_english",
+    persist_directory="./bg_data_english"
 )
+vector_store.add_documents(documents=unique_chunked_docs)
 
-vector_store.add_documents(documents=chunked_docs)
-
-similarity_retriever = vector_store.as_retriever(search_type="similarity_score_threshold",
-search_kwargs={"k": 5, "score_threshold": 0.2})
+similarity_retriever = vector_store.as_retriever(
+    search_type="similarity_score_threshold",
+    search_kwargs={"k": 10, "score_threshold": 0.4})    
 
 # Load the LLM
 quantization_config = BitsAndBytesConfig(load_in_8bit=True)
-tokenizer = AutoTokenizer.from_pretrained("google/gemma-2-9b-it")
+tokenizer = AutoTokenizer.from_pretrained("google/gemma-2-9b-it", cache_dir="./gemma-2-9b-it")
 llm_model = AutoModelForCausalLM.from_pretrained(
-    "google/gemma-2-9b-it",
+    "google/gemma-2-9b-it", cache_dir="./gemma-2-9b-it",
     quantization_config=quantization_config,
+    device_map = 'auto'
 )
 text_generation_pipeline = pipeline(
     model=llm_model,
@@ -82,9 +92,14 @@ history_aware_retriever = create_history_aware_retriever(llm, similarity_retriev
 
 # Define the question-answering system prompt
 qa_system_prompt = """You are a saintly guide inspired by the teachings of the Bhagavad Gita, offering wisdom and moral guidance. Answer questions in a friendly and compassionate tone, drawing insights from the scripture to help users with their life challenges.
-Use the provided context to craft your response and remain faithful to the philosophy of the Bhagavad Gita.
-If you don't know the answer, humbly admit it or request the user to clarify or provide more details.
-Limit your response to 5 lines unless the user explicitly asks for more explanation.
+Use the provided context to craft your response and remain faithful to the philosophy of the Bhagavad Gita. If you don't know the answer, humbly admit it or request the user to clarify or provide more details.
+Limit your response to 5 lines unless the user explicitly asks for more explanation. Answer must be well-structured and coherent, providing a clear and concise solution to the user's query.
+
+**Prohibited:**
+- General Gita knowledge beyond provided context
+- Philosophical extrapolations
+- Personal interpretations
+
 Question:
 {input}
 Context:
@@ -124,7 +139,7 @@ interface = gr.Interface(
     inputs=gr.Textbox(label="Ask your question", placeholder="What's troubling you?"),
     outputs=gr.Textbox(label="Answer"),
     title="Bhagavad Gita Chatbot",
-    description="Ask questions inspired by the teachings of the Bhagavad Gita and receive saintly guidance."
+    description="Get answers to your real life problems from the teachings of the Bhagavad Gita." 
 )
 
 # Launch the app
