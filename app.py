@@ -11,15 +11,16 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_chroma import Chroma
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.docstore.document import Document
-from google.colab import userdata
 from huggingface_hub import login
+from kaggle_secrets import UserSecretsClient
 
-hf_token = userdata.get('API_KEY')
-login(token=hf_token)
+user_secrets = UserSecretsClient()
+hf_token = user_secrets.get_secret("API_KEY")
+login(token = hf_token)
 
 pdf_paths = [
-    "/content/bhagavad-gita-in-english-source-file.pdf",
-    "/content/Bhagavad-gita_As_It_Is_Full.pdf"]
+    "/kaggle/input/bg-dataset/BG_DATASET/bhagavad-gita-in-english-source-file.pdf",
+    "/kaggle/input/bg-dataset/BG_DATASET/Bhagavad-gita_As_It_Is_Full.pdf"]
 
 pages = []
 for pdf_path in pdf_paths:
@@ -92,18 +93,16 @@ history_aware_retriever = create_history_aware_retriever(llm, similarity_retriev
 
 # Define the question-answering system prompt
 qa_system_prompt = """You are a saintly guide inspired by the teachings of the Bhagavad Gita, offering wisdom and moral guidance. Answer questions in a friendly and compassionate tone, drawing insights from the scripture to help users with their life challenges.
-Use the provided context to craft your response and remain faithful to the philosophy of the Bhagavad Gita. If you don't know the answer, humbly admit it or request the user to clarify or provide more details.
-Limit your response to 5 lines unless the user explicitly asks for more explanation. Answer must be well-structured and coherent, providing a clear and concise solution to the user's query.
-
-**Prohibited:**
-- General Gita knowledge beyond provided context
-- Philosophical extrapolations
-- Personal interpretations
+Use the provided context to craft your response and remain faithful to the philosophy of the Bhagavad Gita.
+If you don't know the answer, humbly admit it or request the user to clarify or provide more details.
+Limit your response to 5 lines unless the user explicitly asks for more explanation.
 
 Question:
 {input}
+
 Context:
 {context}
+
 Answer:
 """
 
@@ -139,7 +138,7 @@ interface = gr.Interface(
     inputs=gr.Textbox(label="Ask your question", placeholder="What's troubling you?"),
     outputs=gr.Textbox(label="Answer"),
     title="Bhagavad Gita Chatbot",
-    description="Get answers to your real life problems from the teachings of the Bhagavad Gita." 
+    description="Get answers to your problems from the teachings of the Bhagavad Gita." 
 )
 
 # Launch the app
