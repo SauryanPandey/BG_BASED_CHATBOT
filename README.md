@@ -27,7 +27,7 @@
 
 ## 🧠 RAG Architecture
 
-![RAG architecture Screenshot 13](BG%20Chatbot%20Screenshots\Advanced-RAG.png)
+![RAG architecture](BG%20Chatbot%20Screenshots/Advanced-RAG.png)
 
 ## 🙏 Acknowledgments
 - Bhagavad Gita translations from [As It Is Archives](https://vedabase.io/en/library/bg/)
