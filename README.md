@@ -9,6 +9,10 @@
 - **Multi-Document RAG**: Processes multiple Gita translations simultaneously
 - **Gradio Interface**: User-friendly web UI for seamless interaction
 
+## 🧠 RAG Architecture
+
+![RAG architecture](BG%20Chatbot%20Screenshots/Advanced-RAG.png)
+
 ## Demo of Chatbot using Gradio Interface
 
 ![Bhagavad Gita AI Chatbot Screenshot 1](BG%20Chatbot%20Screenshots/Screenshot%202025-02-01%20192707.png)
@@ -23,11 +27,6 @@
 ![Bhagavad Gita AI Chatbot Screenshot 10](BG%20Chatbot%20Screenshots/339089c4-6678-45a8-b770-3f3e009d1fa8.jfif)
 ![Bhagavad Gita AI Chatbot Screenshot 11](BG%20Chatbot%20Screenshots/b72f2513-569a-48df-9f03-e00798eb75a0.jfif)
 ![Bhagavad Gita AI Chatbot Screenshot 12](BG%20Chatbot%20Screenshots/df7c7942-69a6-46d0-b316-4b4a4dd57ae0.jfif)
-
-
-## 🧠 RAG Architecture
-
-![RAG architecture](BG%20Chatbot%20Screenshots/Advanced-RAG.png)
 
 ## 🙏 Acknowledgments
 - Bhagavad Gita translations from [As It Is Archives](https://vedabase.io/en/library/bg/)
