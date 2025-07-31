@@ -9,6 +9,8 @@
 - **Multi-Document RAG**: Processes multiple Gita translations simultaneously
 - **Gradio Interface**: User-friendly web UI for seamless interaction
 
+
+
 ## Demo of Chatbot using Gradio Interface
 
 ![Bhagavad Gita AI Chatbot Screenshot 1](BG%20Chatbot%20Screenshots/Screenshot%202025-02-01%20192707.png)
