@@ -13,6 +13,8 @@
 
 ## Demo of Chatbot using Gradio Interface
 
+
+
 ![Bhagavad Gita AI Chatbot Screenshot 1](BG%20Chatbot%20Screenshots/Screenshot%202025-02-01%20192707.png)
 ![Bhagavad Gita AI Chatbot Screenshot 2](BG%20Chatbot%20Screenshots/Screenshot%202025-02-01%20193154.png)
 ![Bhagavad Gita AI Chatbot Screenshot 3](BG%20Chatbot%20Screenshots/Screenshot%202025-02-01%20193753.png)
