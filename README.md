@@ -30,4 +30,3 @@
 
 ## 🙏 Acknowledgments
 - Bhagavad Gita translations from [As It Is Archives](https://vedabase.io/en/library/bg/)
-- [Hugging Face](https://huggingface.co) for LLM infrastructure
