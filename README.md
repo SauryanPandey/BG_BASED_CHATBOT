@@ -15,7 +15,7 @@
 
 
 
-![Bhagavad Gita AI Chatbot Screenshot 1](BG%20Chatbot%20Screenshots/Screenshot%202025-02-01%20192707.png)
+<!-- ![Bhagavad Gita AI Chatbot Screenshot 1](BG%20Chatbot%20Screenshots/Screenshot%202025-02-01%20192707.png)
 ![Bhagavad Gita AI Chatbot Screenshot 2](BG%20Chatbot%20Screenshots/Screenshot%202025-02-01%20193154.png)
 ![Bhagavad Gita AI Chatbot Screenshot 3](BG%20Chatbot%20Screenshots/Screenshot%202025-02-01%20193753.png)
 ![Bhagavad Gita AI Chatbot Screenshot 4](BG%20Chatbot%20Screenshots/8e406504-41d9-4add-9bbb-402b7c002685.jfif)
@@ -26,10 +26,8 @@
 ![Bhagavad Gita AI Chatbot Screenshot 9](BG%20Chatbot%20Screenshots/174d41c9-e213-4500-8b72-4d61515e4c5e.jfif)
 ![Bhagavad Gita AI Chatbot Screenshot 10](BG%20Chatbot%20Screenshots/339089c4-6678-45a8-b770-3f3e009d1fa8.jfif)
 ![Bhagavad Gita AI Chatbot Screenshot 11](BG%20Chatbot%20Screenshots/b72f2513-569a-48df-9f03-e00798eb75a0.jfif)
-![Bhagavad Gita AI Chatbot Screenshot 12](BG%20Chatbot%20Screenshots/df7c7942-69a6-46d0-b316-4b4a4dd57ae0.jfif)
+![Bhagavad Gita AI Chatbot Screenshot 12](BG%20Chatbot%20Screenshots/df7c7942-69a6-46d0-b316-4b4a4dd57ae0.jfif) -->
 
 ## 🙏 Acknowledgments
 - Bhagavad Gita translations from [As It Is Archives](https://vedabase.io/en/library/bg/)
 - [Hugging Face](https://huggingface.co) for LLM infrastructure
-- Kaggle for dataset hosting
-- Gradio for UI components
