@@ -1,29 +1,16 @@
-# Core ML
 transformers==4.45.2
 sentence-transformers==3.1.1
 accelerate==0.34.2
-
-# LangChain ecosystem (PINNED & compatible)
 langchain==0.3.7
 langchain-core==0.3.25
 langchain-community==0.3.7
 langchain-huggingface==0.1.2
 langchain-chroma==0.1.4
 langchainhub==0.1.21
-
-# Vector DB
 chromadb==0.5.5
-
-# PDF
 pypdf==4.3.1
-
-# UI
 gradio==4.44.0
-
-# Quantization
 bitsandbytes==0.43.3
-
-# CRITICAL FIXES (DO NOT REMOVE)
 protobuf<5
 fsspec==2024.10.0
 requests==2.32.3
